@@ -9,11 +9,12 @@
   --white--color: #fff;
   --black--color: #1d1d1d;
   --ligthgray--color: #ddd;
+  --ligthgray--color2: #888;
 }
 
 html {
   font-family: "Noto Sans KR", sans-serif;
-  font-size: var(--medium--font);
+  font-size: 14px;
 }
 
 body {
@@ -37,6 +38,7 @@ a {
 /* global nav */
 .global_nav {
   height: 44px;
+  padding: 0 1rem;
 }
 
 .global_nav .global_nav_links,
@@ -57,6 +59,7 @@ a {
 .local_nav {
   height: 52px;
   border-bottom: 1px solid var(--ligthgray--color);
+  padding: 0 1rem;
 }
 
 .local_nav .local_nav_links .product_name {
@@ -68,4 +71,131 @@ a {
 .local_nav .local_nav_links a:not(.product_name) {
   margin-left: 2em;
   font-size: var(--smal--font);
+}
+
+/* section */
+.scroll_section {
+  padding-top: 50vh;
+}
+/* section 1 */
+#scroll_section_01 h1 {
+  font-size: 4rem;
+  text-align: center;
+}
+
+.main_message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 3em;
+  font-size: 2rem;
+  margin: 10px 0;
+}
+/* section 2 */
+.main_message p {
+  line-height: 1.2;
+  font-weight: bold;
+  text-align: center;
+}
+
+.description {
+  max-width: 1000px;
+  margin: 0 auto;
+  font-size: 1.2rem;
+  color: var(--ligthgray--color2);
+  padding: 0 1rem;
+}
+
+.description strong {
+  float: left;
+  margin-right: 0.2em;
+  font-size: 3rem;
+  color: var(--black--color);
+}
+
+/* section 3 */
+.main_message small {
+  display: block;
+  font-size: 1.2rem;
+  margin-bottom: 0.5em;
+}
+
+#scroll_section_03 .main_message {
+  font-size: 3.5rem;
+}
+
+.desc_message {
+  width: 50%;
+  font-weight: 900;
+}
+/* 선 */
+.pin {
+  width: 1px;
+  height: 100px;
+  background: var(--black--color);
+}
+
+/* section 4 */
+.mid_message {
+  font-size: 2rem;
+  color: var(--ligthgray--color2);
+  padding: 0 1rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.mid_message strong {
+  color: var(--black--color);
+  display: block;
+}
+.canvas_caption {
+  color: var(--ligthgray--color2);
+  padding: 0 1rem;
+  font-size: 1.2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* footer */
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 7rem;
+  color: var(--white--color);
+  background: darkorange;
+}
+
+/* desktop */
+@media (min-width: 1024px) {
+  /* section 1 */
+  #scroll_section_01 h1 {
+    font-size: 9vw;
+  }
+  .main_message {
+    font-size: 4vw;
+  }
+  /* section 2 */
+  .description {
+    font-size: 2rem;
+  }
+  .description strong {
+    font-size: 6rem;
+  }
+  /* section 3 */
+  #scroll_section_03 .main_message {
+    font-size: 6vw;
+  }
+  .main_message small {
+    font-size: 1.5vw;
+  }
+  .desc_message {
+    width: 20%;
+  }
+  /* section 4 */
+  .mid_message {
+    font-size: 4vw;
+  }
+  .canvas_caption {
+    font-size: 2rem;
+  }
 }
