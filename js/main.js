@@ -6,6 +6,7 @@
   let yOffset = 0; // window.pageYOffset: 현재 스크롤 위치
   let prevScrollHeight = 0; // 현재 스크롤 위치(yOffset)보다 이전에 위치한 스크롤 섹션들의 scrollHeight 합.
   let currentScene = 0; // 현재 보여지는 씬  = scroll_section
+  let changeScene = false; // 씬이 바뀌는 순간 true
 
   const sceneInfo = [
     // 4개의 section 정보
@@ -16,6 +17,14 @@
       scrollHeight: 0,
       obj: {
         container: document.querySelector("#scroll_section_01"),
+        message1: document.querySelector("#scroll_section_01 .main_message_1"),
+        message2: document.querySelector("#scroll_section_01 .main_message_2"),
+        message3: document.querySelector("#scroll_section_01 .main_message_3"),
+        message4: document.querySelector("#scroll_section_01 .main_message_4"),
+      },
+      // 각 message에 적용시킬 css 값
+      values: {
+        message1_opacity: [0, 1],
       },
     },
     {
@@ -53,9 +62,7 @@
       // 각 섹션의 높이 = 5 * 브라우저의 높이
       sceneInfo[i].scrollHeight = sceneInfo[i].heightNum * window.innerHeight;
       // section의 높이로 적용
-      sceneInfo[
-        i
-      ].obj.container.style.height = `${sceneInfo[i].scrollHeight}px`;
+      sceneInfo[i].obj.container.style.height = `${sceneInfo[i].scrollHeight}px`;
     }
 
     yOffset = window.pageYOffset;
@@ -72,8 +79,39 @@
     document.body.setAttribute("id", `show_scene_0${currentScene + 1}`);
   };
 
+  const calcValues = (value, currentYoffset) => {
+    let res;
+    // 현재 섹션에서 스크롤의 위치 비율
+    let scrollRatio = currentYoffset / sceneInfo[currentScene].scrollHeight;
+    // value의 비율에 맞게 변환
+    res = scrollRatio * (value[1] - value[0]) + value[0];
+    return res;
+  };
+
+  const playAnimation = () => {
+    const obj = sceneInfo[currentScene].obj;
+    const values = sceneInfo[currentScene].values;
+    // currentYoffst: 섹션에서의 현재 스크롤 위치
+    const currentYoffset = yOffset - prevScrollHeight;
+    // 현재 씬에서만 애니메이션이 적용되도록 분기 처리
+    switch (currentScene) {
+      case 0:
+        let message1_opcaity_in = calcValues(values.message1_opacity, currentYoffset);
+        obj.message1.style.opacity = message1_opcaity_in;
+        // css
+        break;
+      case 1:
+        break;
+      case 2:
+        break;
+      case 3:
+        break;
+    }
+  };
+
   // 활성화 시킬 scene의 번호 설정
   const scrollLoop = () => {
+    changeScene = false;
     prevScrollHeight = 0;
     // 현재 씬 이전의 씬들의 스크롤 높이 합 계산.
     for (let i = 0; i < currentScene; i++) {
@@ -84,20 +122,25 @@
     // 즉 섹션이 바뀔 때...
     if (yOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
       currentScene++;
+      changeScene = true; // 씬이 바뀌는 순간 true로 변경
+      // body 요소에 현재 씬 관련 아이디 값을 설정하면
+      // 씬에 해당하는 .stick_elem 요소가 보임
       document.body.setAttribute("id", `show_scene_0${currentScene + 1}`);
     }
     // 현재 스크롤 위치 < 이전 씬들의 스크롤 높이 합
     // 섹션이 바뀔 때
     if (yOffset < prevScrollHeight) {
+      changeScene = true; // 씬이 바뀌는 순간 true로 변경
       // currentScene이 -1 되는 경우를 방지
       if (currentScene === 0) return;
       currentScene--;
       document.body.setAttribute("id", `show_scene_0${currentScene + 1}`);
     }
 
-    // body 요소에 현재 씬 관련 아이디 값을 설정하면
-    // 씬에 해당하는 .stick_elem 요소가 보임
-    // document.body.setAttribute("id", `show_scene_0${currentScene + 1}`);
+    // 씬이 바뀌는 순간에는 종료
+    if (changeScene) return;
+
+    playAnimation();
   };
 
   // 브라우저의 사이즈가 변경되면 section의 높이를 재설정
