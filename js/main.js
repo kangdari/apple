@@ -26,9 +26,13 @@
       // 각 message에 적용시킬 css 값
       values: {
         // start, end는 애니메이션이 재생되는 구간의 비율
-        message1_opacity_in: [0, 1, { start: 0.1, end: 0.2 }], // 나타날 때
-        message1_opacity_out: [1, 0, { start: 0.23, end: 0.3 }], // 사라질 때
-        message2_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
+        message1_opacity_in: [0, 1, { start: 0.1, end: 0.2 }], // 나타날 때 투명도
+        message1_opacity_out: [1, 0, { start: 0.23, end: 0.3 }], // 사라질 때 투명도
+        // y축을 기준으로 이동하므로 처음 나타날때는 20% 위치에서 0으로 이동하고
+        // 사라질 때는 0에서 위로 이동(-20%)
+        message1_translateY_in: [20, 0, { start: 0.1, end: 0.2 }], // 나타날 때 움직임
+        message1_translateY_out: [0, -20, { start: 0.23, end: 0.3 }], // 사라질 때 움직임
+        // message2_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
       },
     },
     {
@@ -89,15 +93,15 @@
     // 현재 섹션에서 스크롤의 위치 비율
     const scrollRatio = currentYoffset / scrollHeight;
 
-    if (!!value[2]) {
+    if (value[2]) {
       // start, end 사이에 애니메이션 실행
       const startPoint = value[2].start * scrollHeight;
       const endPoint = value[2].end * scrollHeight;
       // 애니메이션이 실행 되는 구간의 높이
       const scrollPointHeight = endPoint - startPoint;
-      // 애니메이셔이 실행되는 구간안에서만
+      // 애니메이션이 실행되는 구간안에서만
       if (currentYoffset >= startPoint && currentYoffset <= endPoint) {
-        // console.log((currentYoffset - startPoint) / scrollPointHeight);
+        // !!! res는 = 애니메이션이 실행되는 구간의 비율 * value의 범위
         res = ((currentYoffset - startPoint) / scrollPointHeight) * (value[1] - value[0]) + value[0];
       } else if (currentYoffset < startPoint) {
         // 애니메이션 시작점 이전일 때 초기 값
@@ -129,11 +133,15 @@
       case 0:
         let message1_opcaity_in = calcValues(values.message1_opacity_in, currentYoffset);
         let message1_opcaity_out = calcValues(values.message1_opacity_out, currentYoffset);
+        let message1_translateY_in = calcValues(values.message1_translateY_in, currentYoffset);
+        let message1_translateY_out = calcValues(values.message1_translateY_out, currentYoffset);
 
         if (scrollRatio <= 0.22) {
           obj.message1.style.opacity = message1_opcaity_in;
+          obj.message1.style.transform = `translateY(${message1_translateY_in}%)`;
         } else {
           obj.message1.style.opacity = message1_opcaity_out;
+          obj.message1.style.transform = `translateY(${message1_translateY_out}%)`;
         }
 
         // css
