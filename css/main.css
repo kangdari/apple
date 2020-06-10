@@ -112,6 +112,10 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
   text-align: center;
 }
 
+#scroll_section_02.scroll_section {
+  padding-top: 0;
+}
+
 .description {
   max-width: 1000px;
   margin: 0 auto;
@@ -147,6 +151,16 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
   width: 1px;
   height: 100px;
   background: var(--black--color);
+}
+
+#scroll_section_03 .main_message_2 {
+  top: 10%;
+  left: 40%;
+}
+
+#scroll_section_03 .main_message_3 {
+  top: 15%;
+  left: 45%;
 }
 
 /* section 4 */
@@ -223,6 +237,14 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
   }
   .desc_message {
     width: 20%;
+  }
+  #scroll_section_03 .main_message_2 {
+    top: 20%;
+    left: 53%;
+  }
+
+  #scroll_section_03 .main_message_3 {
+    left: 55%;
   }
   /* section 4 */
   .mid_message {

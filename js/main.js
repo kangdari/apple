@@ -32,13 +32,27 @@
         // 사라질 때는 0에서 위로 이동(-20%)
         message1_translateY_in: [20, 0, { start: 0.1, end: 0.2 }], // 나타날 때 움직임
         message1_translateY_out: [0, -20, { start: 0.23, end: 0.3 }], // 사라질 때 움직임
-        // message2_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
+        // message2
+        message2_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
+        message2_opacity_out: [1, 0, { start: 0.41, end: 0.5 }],
+        message2_translateY_in: [20, 0, { start: 0.3, end: 0.4 }],
+        message2_translateY_out: [0, -20, { start: 0.41, end: 0.5 }],
+        // message3
+        message3_opacity_in: [0, 1, { start: 0.5, end: 0.6 }],
+        message3_opacity_out: [1, 0, { start: 0.61, end: 0.7 }],
+        message3_translateY_in: [20, 0, { start: 0.5, end: 0.6 }],
+        message3_translateY_out: [0, -20, { start: 0.61, end: 0.7 }],
+        // message4
+        message4_opacity_in: [0, 1, { start: 0.7, end: 0.8 }],
+        message4_opacity_out: [1, 0, { start: 0.81, end: 0.9 }],
+        message4_translateY_in: [20, 0, { start: 0.7, end: 0.8 }],
+        message4_translateY_out: [0, -20, { start: 0.81, end: 0.9 }]
       },
     },
     {
       // section 2
       type: "normal",
-      heightNum: 5,
+      // heightNum: 5, // default 높이로 설정하기 때문에 필요 없음
       scrollHeight: 0,
       obj: {
         container: document.querySelector("#scroll_section_02"),
@@ -51,7 +65,28 @@
       scrollHeight: 0,
       obj: {
         container: document.querySelector("#scroll_section_03"),
+        message1: document.querySelector('#scroll_section_03 .main_message_1'),
+        message2: document.querySelector('#scroll_section_03 .main_message_2'),
+        message3: document.querySelector('#scroll_section_03 .main_message_3'),
+        pin2: document.querySelector('#scroll_section_03 .main_message_2 .pin'),
+        pin3: document.querySelector('#scroll_section_03 .main_message_3 .pin'),
       },
+      values: {
+        message1_opacity_in: [0, 1, { start: 0.1, end: 0.2 }], // 나타날 때 투명도
+        message1_opacity_out: [1, 0, { start: 0.23, end: 0.3 }], // 사라질 때 투명도
+        message1_translateY_in: [20, 0, { start: 0.1, end: 0.2 }], // 나타날 때 움직임
+        message1_translateY_out: [0, -20, { start: 0.23, end: 0.3 }], // 사라질 때 움직임
+        // message2
+        message2_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
+        message2_opacity_out: [1, 0, { start: 0.41, end: 0.5 }],
+        message2_translateY_in: [20, 0, { start: 0.3, end: 0.4 }],
+        message2_translateY_out: [0, -20, { start: 0.41, end: 0.5 }],
+        // message3
+        message3_opacity_in: [0, 1, { start: 0.5, end: 0.6 }],
+        message3_opacity_out: [1, 0, { start: 0.61, end: 0.7 }],
+        message3_translateY_in: [20, 0, { start: 0.5, end: 0.6 }],
+        message3_translateY_out: [0, -20, { start: 0.61, end: 0.7 }],
+      }
     },
     {
       // section 4
@@ -67,9 +102,13 @@
   // section의 높이 설정 함수
   const setLayout = () => {
     for (let i = 0; i < sceneInfo.length; i++) {
-      // 각 섹션의 높이 = 5 * 브라우저의 높이
-      sceneInfo[i].scrollHeight = sceneInfo[i].heightNum * window.innerHeight;
-      // section의 높이로 적용
+      // 애니메이션이 필요한 섹션에만 높이를 추가 설정
+      if (sceneInfo[i].type === "sticky") {
+        // 각 섹션의 높이 = 5 * 브라우저의 높이
+        sceneInfo[i].scrollHeight = sceneInfo[i].heightNum * window.innerHeight;
+      } else if (sceneInfo[i].type === "normal") {
+        sceneInfo[i].scrollHeight = sceneInfo[i].obj.container.offsetHeight;
+      }
       sceneInfo[i].obj.container.style.height = `${sceneInfo[i].scrollHeight}px`;
     }
 
@@ -127,28 +166,85 @@
     const scrollHeight = sceneInfo[currentScene].scrollHeight;
     // 현재 씬에서의 스크롤 위치 비율
     const scrollRatio = currentYoffset / scrollHeight;
+    // console.log(scrollRatio)
 
     // 현재 씬에서만 애니메이션이 적용되도록 분기 처리
     switch (currentScene) {
       case 0:
-        let message1_opcaity_in = calcValues(values.message1_opacity_in, currentYoffset);
-        let message1_opcaity_out = calcValues(values.message1_opacity_out, currentYoffset);
-        let message1_translateY_in = calcValues(values.message1_translateY_in, currentYoffset);
-        let message1_translateY_out = calcValues(values.message1_translateY_out, currentYoffset);
-
+        // 필요한 상황에만 연산하도록 코드 수정
         if (scrollRatio <= 0.22) {
-          obj.message1.style.opacity = message1_opcaity_in;
-          obj.message1.style.transform = `translateY(${message1_translateY_in}%)`;
-        } else {
-          obj.message1.style.opacity = message1_opcaity_out;
-          obj.message1.style.transform = `translateY(${message1_translateY_out}%)`;
+          // in
+          obj.message1.style.opacity = calcValues(values.message1_opacity_in, currentYoffset);
+          obj.message1.style.transform = `translateY(${calcValues(values.message1_translateY_in, currentYoffset)}px)`;
+        } else if (scrollRatio > 0.22) {
+          // out
+          obj.message1.style.opacity = calcValues(values.message1_opacity_out, currentYoffset);
+          obj.message1.style.transform = `translateY(${calcValues(values.message1_translateY_out, currentYoffset)}px)`;
         }
-
+        // message2
+        if (scrollRatio <= 0.42) {
+          //in
+          obj.message2.style.opacity = calcValues(values.message2_opacity_in, currentYoffset);
+          obj.message2.style.transform = `translateY(${calcValues(values.message2_translateY_in, currentYoffset)}px)`
+        } else if (scrollRatio > 0.42) {
+          // out
+          obj.message2.style.opacity = calcValues(values.message2_opacity_out, currentYoffset);
+          obj.message2.style.transform = `translateY(${calcValues(values.message2_translateY_out, currentYoffset)}px)`
+        }
+        // message 3 
+        if (scrollRatio <= 0.62) {
+          //in
+          obj.message3.style.opacity = calcValues(values.message3_opacity_in, currentYoffset);
+          obj.message3.style.transform = `translateY(${calcValues(values.message3_translateY_in, currentYoffset)}px)`
+        } else if (scrollRatio > 0.62) {
+          // out
+          obj.message3.style.opacity = calcValues(values.message3_opacity_out, currentYoffset);
+          obj.message3.style.transform = `translateY(${calcValues(values.message3_translateY_out, currentYoffset)}px)`
+        }
+        // message 4 
+        if (scrollRatio <= 0.82) {
+          //in
+          obj.message4.style.opacity = calcValues(values.message4_opacity_in, currentYoffset);
+          obj.message4.style.transform = `translateY(${calcValues(values.message4_translateY_in, currentYoffset)}px)`
+        } else if (scrollRatio > 0.62) {
+          // out
+          obj.message4.style.opacity = calcValues(values.message4_opacity_out, currentYoffset);
+          obj.message4.style.transform = `translateY(${calcValues(values.message4_translateY_out, currentYoffset)}px)`
+        }
         // css
         break;
       case 1:
         break;
       case 2:
+        if (scrollRatio <= 0.22) {
+          // in
+          obj.message1.style.opacity = calcValues(values.message1_opacity_in, currentYoffset);
+          obj.message1.style.transform = `translateY(${calcValues(values.message1_translateY_in, currentYoffset)}px)`;
+        } else if (scrollRatio > 0.22) {
+          // out
+          obj.message1.style.opacity = calcValues(values.message1_opacity_out, currentYoffset);
+          obj.message1.style.transform = `translateY(${calcValues(values.message1_translateY_out, currentYoffset)}px)`;
+        }
+        // message2
+        if (scrollRatio <= 0.42) {
+          //in
+          obj.message2.style.opacity = calcValues(values.message2_opacity_in, currentYoffset);
+          obj.message2.style.transform = `translateY(${calcValues(values.message2_translateY_in, currentYoffset)}px)`
+        } else if (scrollRatio > 0.42) {
+          // out
+          obj.message2.style.opacity = calcValues(values.message2_opacity_out, currentYoffset);
+          obj.message2.style.transform = `translateY(${calcValues(values.message2_translateY_out, currentYoffset)}px)`
+        }
+        // message 3 
+        if (scrollRatio <= 0.62) {
+          //in
+          obj.message3.style.opacity = calcValues(values.message3_opacity_in, currentYoffset);
+          obj.message3.style.transform = `translateY(${calcValues(values.message3_translateY_in, currentYoffset)}px)`
+        } else if (scrollRatio > 0.62) {
+          // out
+          obj.message3.style.opacity = calcValues(values.message3_opacity_out, currentYoffset);
+          obj.message3.style.transform = `translateY(${calcValues(values.message3_translateY_out, currentYoffset)}px)`
+        }
         break;
       case 3:
         break;
