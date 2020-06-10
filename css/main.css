@@ -103,6 +103,7 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
   height: 3em;
   font-size: 2rem;
   margin: 10px 0;
+  top: 35vh;
 }
 /* section 2 */
 .main_message p {
@@ -184,7 +185,7 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
 .stick_elem {
   display: none;
   position: fixed;
-  top: 0;
+  /* top: 0; */
   left: 0;
   width: 100%;
 }

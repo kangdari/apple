@@ -15,6 +15,7 @@
       type: "sticky",
       heightNum: 5, // 브라우저의 높이의 5배로 scrollHeight 세팅
       scrollHeight: 0,
+      // DOM 요소
       obj: {
         container: document.querySelector("#scroll_section_01"),
         message1: document.querySelector("#scroll_section_01 .main_message_1"),
@@ -24,7 +25,10 @@
       },
       // 각 message에 적용시킬 css 값
       values: {
-        message1_opacity: [0, 1],
+        // start, end는 애니메이션이 재생되는 구간의 비율
+        message1_opacity_in: [0, 1, { start: 0.1, end: 0.2 }], // 나타날 때
+        message1_opacity_out: [1, 0, { start: 0.23, end: 0.3 }], // 사라질 때
+        message2_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
       },
     },
     {
@@ -81,10 +85,32 @@
 
   const calcValues = (value, currentYoffset) => {
     let res;
+    const scrollHeight = sceneInfo[currentScene].scrollHeight;
     // 현재 섹션에서 스크롤의 위치 비율
-    let scrollRatio = currentYoffset / sceneInfo[currentScene].scrollHeight;
-    // value의 비율에 맞게 변환
-    res = scrollRatio * (value[1] - value[0]) + value[0];
+    const scrollRatio = currentYoffset / scrollHeight;
+
+    if (!!value[2]) {
+      // start, end 사이에 애니메이션 실행
+      const startPoint = value[2].start * scrollHeight;
+      const endPoint = value[2].end * scrollHeight;
+      // 애니메이션이 실행 되는 구간의 높이
+      const scrollPointHeight = endPoint - startPoint;
+      // 애니메이셔이 실행되는 구간안에서만
+      if (currentYoffset >= startPoint && currentYoffset <= endPoint) {
+        // console.log((currentYoffset - startPoint) / scrollPointHeight);
+        res = ((currentYoffset - startPoint) / scrollPointHeight) * (value[1] - value[0]) + value[0];
+      } else if (currentYoffset < startPoint) {
+        // 애니메이션 시작점 이전일 때 초기 값
+        res = value[0];
+      } else if (currentYoffset > endPoint) {
+        // 애니메이션 끝점 이후일 때 초기 값
+        res = value[1];
+      }
+    } else {
+      // value의 비율에 맞게 변환
+      res = scrollRatio * (value[1] - value[0]) + value[0];
+    }
+    // console.log(res);
     return res;
   };
 
@@ -93,11 +119,23 @@
     const values = sceneInfo[currentScene].values;
     // currentYoffst: 섹션에서의 현재 스크롤 위치
     const currentYoffset = yOffset - prevScrollHeight;
+    // 현재 씬의 스크롤 높이
+    const scrollHeight = sceneInfo[currentScene].scrollHeight;
+    // 현재 씬에서의 스크롤 위치 비율
+    const scrollRatio = currentYoffset / scrollHeight;
+
     // 현재 씬에서만 애니메이션이 적용되도록 분기 처리
     switch (currentScene) {
       case 0:
-        let message1_opcaity_in = calcValues(values.message1_opacity, currentYoffset);
-        obj.message1.style.opacity = message1_opcaity_in;
+        let message1_opcaity_in = calcValues(values.message1_opacity_in, currentYoffset);
+        let message1_opcaity_out = calcValues(values.message1_opacity_out, currentYoffset);
+
+        if (scrollRatio <= 0.22) {
+          obj.message1.style.opacity = message1_opcaity_in;
+        } else {
+          obj.message1.style.opacity = message1_opcaity_out;
+        }
+
         // css
         break;
       case 1:
