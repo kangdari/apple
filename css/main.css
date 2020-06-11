@@ -92,6 +92,10 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
 }
 /* section 1 */
 #scroll_section_01 h1 {
+  /* canvas가 absolute이므로 h1를 relative로 수정하고 z-index값 설정 */
+  position: relative;
+  top: -10vh;
+  z-index: 5;
   font-size: 4rem;
   text-align: center;
 }

@@ -32,6 +32,7 @@
         // video
         videoImageCount: 300, // 사용할 이미지 파일 수
         imageSequence: [0, 299], // 이미지 시작, 끝 인덱스 번호
+        canvas_opacity_out: [1, 0, { start: 0.9, end: 1 }], // canvas의 opacity
         // start, end는 애니메이션이 재생되는 구간의 비율
         message1_opacity_in: [0, 1, { start: 0.1, end: 0.2 }], // 나타날 때 투명도
         message1_opacity_out: [1, 0, { start: 0.23, end: 0.3 }], // 사라질 때 투명도
@@ -41,19 +42,19 @@
         message1_translateY_out: [0, -20, { start: 0.23, end: 0.3 }], // 사라질 때 움직임
         // message2
         message2_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
-        message2_opacity_out: [1, 0, { start: 0.41, end: 0.5 }],
+        message2_opacity_out: [1, 0, { start: 0.43, end: 0.5 }],
         message2_translateY_in: [20, 0, { start: 0.3, end: 0.4 }],
-        message2_translateY_out: [0, -20, { start: 0.41, end: 0.5 }],
+        message2_translateY_out: [0, -20, { start: 0.43, end: 0.5 }],
         // message3
         message3_opacity_in: [0, 1, { start: 0.5, end: 0.6 }],
-        message3_opacity_out: [1, 0, { start: 0.61, end: 0.7 }],
+        message3_opacity_out: [1, 0, { start: 0.63, end: 0.7 }],
         message3_translateY_in: [20, 0, { start: 0.5, end: 0.6 }],
-        message3_translateY_out: [0, -20, { start: 0.61, end: 0.7 }],
+        message3_translateY_out: [0, -20, { start: 0.63, end: 0.7 }],
         // message4
         message4_opacity_in: [0, 1, { start: 0.7, end: 0.8 }],
-        message4_opacity_out: [1, 0, { start: 0.81, end: 0.9 }],
+        message4_opacity_out: [1, 0, { start: 0.83, end: 0.9 }],
         message4_translateY_in: [20, 0, { start: 0.7, end: 0.8 }],
-        message4_translateY_out: [0, -20, { start: 0.81, end: 0.9 }],
+        message4_translateY_out: [0, -20, { start: 0.83, end: 0.9 }],
       },
     },
     {
@@ -206,7 +207,7 @@
         // 동영상(이미지)은 섹션의 시작부터 끝까지 실행되어야 하기 때문에 분기 처리를 하지 않습니다.
         let sequence = Math.round(calcValues(values.imageSequence, currentYoffset)); // 정수로 변경
         obj.context.drawImage(obj.videoImages[sequence], 0, 0); // (file, x축, y축)
-
+        obj.canvas.style.opacity = calcValues(values.canvas_opacity_out, currentYoffset); // canvas opacity 0으로...
         // 필요한 상황에만 연산하도록 코드 수정
         if (scrollRatio <= 0.22) {
           // in
@@ -335,5 +336,9 @@
 
   // load: html요소들과 img와 같은 리소스들도 로드될 때
   // 문서가 로드되면 setLayout 실행.
-  window.addEventListener("load", setLayout);
+  window.addEventListener("load", () => {
+    setLayout();
+    // 로드가 끝나고 동영상 첫 이미지를 캔버스에 그려줌.
+    sceneInfo[0].obj.context.drawImage(sceneInfo[0].obj.videoImages[0], 0, 0); // (file, x축, y축)
+  });
 })();
