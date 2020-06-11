@@ -22,9 +22,16 @@
         message2: document.querySelector("#scroll_section_01 .main_message_2"),
         message3: document.querySelector("#scroll_section_01 .main_message_3"),
         message4: document.querySelector("#scroll_section_01 .main_message_4"),
+        // canvas
+        canvas: document.querySelector("#video_canvas_1"), // canvas 객체
+        context: document.querySelector("#video_canvas_1").getContext("2d"), // canvas.context 객체
+        videoImages: [], // img 객체를 담아둘 배열
       },
       // 각 message에 적용시킬 css 값
       values: {
+        // video
+        videoImageCount: 300, // 사용할 이미지 파일 수
+        imageSequence: [0, 299], // 이미지 시작, 끝 인덱스 번호
         // start, end는 애니메이션이 재생되는 구간의 비율
         message1_opacity_in: [0, 1, { start: 0.1, end: 0.2 }], // 나타날 때 투명도
         message1_opacity_out: [1, 0, { start: 0.23, end: 0.3 }], // 사라질 때 투명도
@@ -101,6 +108,21 @@
     },
   ];
 
+  // videoImages 배열 설정 함수
+  const setCanvasImage = () => {
+    let imgElem;
+    // 이미지 수만큼 이미지 객체를 생성하고 src 속성 값 설정 후
+    // videoImages 배열에 push
+    for (let i = 0; i < sceneInfo[0].values.videoImageCount; i++) {
+      imgElem = new Image();
+      // imgElem = document.createElement('img');
+      imgElem.src = `/video/001/IMG_${6726 + i}.JPG`;
+      sceneInfo[0].obj.videoImages.push(imgElem);
+    }
+  };
+
+  setCanvasImage();
+
   // section의 높이 설정 함수
   const setLayout = () => {
     for (let i = 0; i < sceneInfo.length; i++) {
@@ -130,19 +152,20 @@
 
   const calcValues = (value, currentYoffset) => {
     let res;
+    // 현재 섹션 스크롤 높이
     const scrollHeight = sceneInfo[currentScene].scrollHeight;
     // 현재 섹션에서 스크롤의 위치 비율
     const scrollRatio = currentYoffset / scrollHeight;
 
     if (value[2]) {
       // start, end 사이에 애니메이션 실행
-      const startPoint = value[2].start * scrollHeight;
-      const endPoint = value[2].end * scrollHeight;
+      const startPoint = value[2].start * scrollHeight; // 섹션에서의 시작점 비율
+      const endPoint = value[2].end * scrollHeight; // 섹션에서의 끝점 비율
       // 애니메이션이 실행 되는 구간의 높이
       const scrollPointHeight = endPoint - startPoint;
       // 애니메이션이 실행되는 구간안에서만
       if (currentYoffset >= startPoint && currentYoffset <= endPoint) {
-        // !!! res는 = 애니메이션이 실행되는 구간의 비율 * value의 범위
+        // !!! res는 = 애니메이션이 실행되는 구간의 비율 * value의 범위, value[0]를 더해주는 것은 시작점을 초기값으로 하기 위해서
         res = ((currentYoffset - startPoint) / scrollPointHeight) * (value[1] - value[0]) + value[0];
       } else if (currentYoffset < startPoint) {
         // 애니메이션 시작점 이전일 때 초기 값
@@ -173,6 +196,10 @@
     // 현재 씬에서만 애니메이션이 적용되도록 분기 처리
     switch (currentScene) {
       case 0:
+        // 동영상(이미지)은 섹션의 시작부터 끝까지 실행되어야 하기 때문에 분기 처리를 하지 않습니다.
+        let sequence = Math.round(calcValues(values.imageSequence, currentYoffset)); // 정수로 변경
+        obj.context.drawImage(obj.videoImages[sequence], 0, 0); // (file, x축, y축)
+
         // 필요한 상황에만 연산하도록 코드 수정
         if (scrollRatio <= 0.22) {
           // in

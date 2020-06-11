@@ -46,6 +46,7 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
   width: 100%;
   height: 44px;
   padding: 0 1rem;
+  z-index: 10;
 }
 
 .global_nav .global_nav_links,
@@ -71,6 +72,7 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
   height: 52px;
   border-bottom: 1px solid var(--ligthgray--color);
   padding: 0 1rem;
+  z-index: 10;
 }
 
 .local_nav .local_nav_links .product_name {
@@ -194,10 +196,10 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
   background: darkorange;
 }
 
-/* stick_elem */
-/* 기본적으로 stick_elem display을 none으로 설정하고 */
+/* sticky_elem */
+/* 기본적으로 sticky_elem display을 none으로 설정하고 */
 /* 스크롤의 위치에 따라서 보이도록 처리. */
-.stick_elem {
+.sticky_elem {
   display: none;
   position: fixed;
   /* top: 0; */
@@ -206,11 +208,17 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
 }
 /* 스크롤의 위치에 따라서 body 태그에 show_scene_num id값을 부여하여 */
 /* 보이는 section을 설정함. */
-#show_scene_01 #scroll_section_01 .stick_elem,
-#show_scene_02 #scroll_section_02 .stick_elem,
-#show_scene_03 #scroll_section_03 .stick_elem,
-#show_scene_04 #scroll_section_04 .stick_elem {
+#show_scene_01 #scroll_section_01 .sticky_elem,
+#show_scene_02 #scroll_section_02 .sticky_elem,
+#show_scene_03 #scroll_section_03 .sticky_elem,
+#show_scene_04 #scroll_section_04 .sticky_elem {
   display: block;
+}
+
+/* canvas */
+.sticky_elem_canvas {
+  top: 0;
+  /* background-color: #ccc; */
 }
 
 /* desktop */
