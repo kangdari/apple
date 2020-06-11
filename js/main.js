@@ -148,6 +148,13 @@
       }
     }
     document.body.setAttribute("id", `show_scene_0${currentScene + 1}`);
+
+    // heightRatio: canvas를 브라우저 크기에 맞추기 위해서 canvas의 height와 브라우저의 높이 비율
+    const heightRatio = window.innerHeight / 1080; // 브라우저의 높이 / canvas 높이
+
+    // 1. css에서 canvas의 top, left를 50% 주고 translate3d를 이용하여 중앙 정렬.
+    // 2. heightRatio 비율 값만큼 canvas의 scale에 적용해준다.
+    sceneInfo[0].obj.canvas.style.transform = `translate3d(-50%, -50%, 0 ) scale(${heightRatio})`;
   };
 
   const calcValues = (value, currentYoffset) => {

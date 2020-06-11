@@ -88,7 +88,6 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
 
 /* section */
 .scroll_section {
-  border: 3px solid black;
   padding-top: 50vh;
 }
 /* section 1 */
@@ -218,7 +217,14 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
 /* canvas */
 .sticky_elem_canvas {
   top: 0;
-  /* background-color: #ccc; */
+  height: 100%;
+}
+
+.sticky_elem_canvas canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* 중앙 정렬을 위한 translate3d 속성은 인라인 요소로 스크립트에서 설정함. */
 }
 
 /* desktop */
