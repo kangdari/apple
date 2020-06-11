@@ -112,9 +112,9 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
   text-align: center;
 }
 
-#scroll_section_02.scroll_section {
+/* #scroll_section_02.scroll_section {
   padding-top: 0;
-}
+} */
 
 .description {
   max-width: 1000px;
@@ -143,6 +143,7 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
 }
 
 .desc_message {
+  opacity: 0;
   width: 50%;
   font-weight: 900;
 }
