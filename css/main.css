@@ -189,6 +189,15 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
   margin: 0 auto;
 }
 
+.image_blend_canvas {
+}
+
+#scroll_section_04 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 /* footer */
 .footer {
   display: flex;

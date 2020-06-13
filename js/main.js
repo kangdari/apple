@@ -116,11 +116,16 @@
       scrollHeight: 0,
       obj: {
         container: document.querySelector("#scroll_section_04"),
+        canvasCaption: document.querySelector(".canvas_caption"),
+        canvas: document.querySelector(".image_blend_canvas"),
+        context: document.querySelector(".image_blend_canvas").getContext("2d"),
+        imagesPath: ["./images/blend-image-1.jpg", "./images/blend-image-2.jpg"],
+        images: [],
       },
+      values: {},
     },
   ];
-
-  // videoImages 배열 설정 함수
+  // section별 canvas 이미지 파일 설정
   const setCanvasImage = () => {
     let imgElem;
     // 이미지 수만큼 이미지 객체를 생성하고 src 속성 값 설정 후
@@ -138,6 +143,13 @@
       // imgElem = document.createElement('img');
       imgElem2.src = `/video/002/IMG_${7028 + i}.JPG`;
       sceneInfo[2].obj.videoImages.push(imgElem2);
+    }
+
+    let imgElem3;
+    for (let i = 0; i < sceneInfo[3].obj.imagesPath.length; i++) {
+      imgElem3 = new Image();
+      imgElem3.src = sceneInfo[3].obj.imagesPath[i];
+      sceneInfo[3].obj.images.push(imgElem3);
     }
   };
 
@@ -319,6 +331,24 @@
         }
         break;
       case 3:
+        // canvas의 width, height가 브라우저에 가득 차게하기 위해서 설정( 계산 필요 )
+        const widthRatio = window.innerWidth / obj.canvas.width; // 원래 canvas의 너비에 대한 브라우저의 너비 비율
+        const heightRatio = window.innerHeight / obj.canvas.height; // 원래 canvas의 높이에 대한 브라우저의 높이 비율
+        let canvasScaleRatio;
+
+        if (widthRatio <= heightRatio) {
+          // 캔버스보다 브라우저 창이 홀쭉  | |
+          canvasScaleRatio = heightRatio;
+          console.log("heightRatio로 비율 결정");
+        } else {
+          // 캔버스보다 브라우저 창이 납작 |       |
+          canvasScaleRatio = widthRatio;
+          console.log("widthRatio로 비율 결정");
+        }
+        // 캔버스의 크기 설정
+        obj.canvas.style.transform = `scale(${canvasScaleRatio})`;
+        obj.context.drawImage(obj.images[0], 0, 0);
+
         break;
     }
   };
