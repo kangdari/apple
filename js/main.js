@@ -123,9 +123,12 @@
         images: [],
       },
       values: {
-        // whiteBox 좌우 2개
-        rect1X: [0, 0, { start: 0, end: 0 }],
+        // whiteRect는 브라우저 마다 크기가 다르기 때문에 초기 값은 0으로 설정하고
+        // playAnimation 함수에서 설정함.
+        rect1X: [0, 0, { start: 0, end: 0 }], // 사각형 그리는 [ 시작 좌표, 이동 후 끝 좌표, { 애니메이션 타이밍 }]
         rect2X: [0, 0, { start: 0, end: 0 }],
+        // canvas의 애니메이션이 시작 되는 지점, top 위치 값 설정, 단 한번 만 설정 되도록..
+        rectStartY: 0,
       },
     },
   ];
@@ -205,6 +208,7 @@
       // start, end 사이에 애니메이션 실행
       const startPoint = value[2].start * scrollHeight; // 섹션에서의 시작점 비율
       const endPoint = value[2].end * scrollHeight; // 섹션에서의 끝점 비율
+      // console.log(endPoint);
       // 애니메이션이 실행 되는 구간의 높이
       const scrollPointHeight = endPoint - startPoint;
       // 애니메이션이 실행되는 구간안에서만
@@ -354,21 +358,39 @@
         obj.context.drawImage(obj.images[0], 0, 0);
 
         // 캔버스 사이즈에 맞춰 innerWidth, innerHeight
-        // 브라우저의 크기에 맞춰 그려진 canvas의 너비와 높이 값 계산
-        const recalculatedInnerWidth = window.innerWidth / canvasScaleRatio;
+        // 브라우저의 크기에 맞춰 그려진 canvas의 너비와 높이 값 계산, 줄어든 canvas
+        // window.innerWidth는 스크롤의 너비까지 포함함으로 스크롤 너비를 포함하지 않는 document.body.offsetWidth로 변경
+        const recalculatedInnerWidth = document.body.offsetWidth / canvasScaleRatio;
         const recalculatedInnerHeight = window.innerHeight / canvasScaleRatio;
-        // whiteBox 너비
+        // canvas 애니메이션이 시작할 때의 top 위치 값 처음에만 설정
+        if (!values.rectStartY) {
+          // values.rectStartY = obj.canvas.getBoundingClientRect().top; // 스크롤 속도에 따라서 값이 달라짐.
+          // 스크롤 속도와 상관없이 일정한 값을 리턴해주나 문서의 가장 위쪽으로부터 거리 값
+          values.rectStartY = obj.canvas.offsetTop + (obj.canvas.height - obj.canvas.height * canvasScaleRatio) / 2;
+          // whiteRect 애니메이션 start
+          values.rect1X[2].start = window.innerHeight / 2 / scrollHeight;
+          values.rect2X[2].start = window.innerHeight / 2 / scrollHeight;
+          // whiteRect 애니메이션 end
+          values.rect1X[2].end = values.rectStartY / scrollHeight;
+          values.rect2X[2].end = values.rectStartY / scrollHeight;
+        }
+
+        // whiteRect 너비
         const whiteRectWidth = recalculatedInnerWidth * 0.15;
-        // 초기 whiteBox 좌표 구하기, 브라우저마다 크기가 다르므로 별도의 설정이 필요함
+        // 초기 whiteRect 좌표 구하기, 브라우저마다 크기가 다르므로 별도의 설정이 필요함
         values.rect1X[0] = (obj.canvas.width - recalculatedInnerWidth) / 2;
         values.rect1X[1] = values.rect1X[0] - whiteRectWidth;
         values.rect2X[0] = values.rect1X[0] + recalculatedInnerWidth - whiteRectWidth;
         values.rect2X[1] = values.rect2X[0] + whiteRectWidth;
 
-        // 좌우 whiteBox 그리기. context.fillRect(x, y, width, height)
+        // 좌우 whiteRect 그리기. context.fillRect(x, y, width, height)
         obj.context.fillStyle = "white";
-        obj.context.fillRect(values.rect1X[0], 0, parseInt(whiteRectWidth), obj.canvas.height);
-        obj.context.fillRect(values.rect2X[0], 0, parseInt(whiteRectWidth), obj.canvas.height);
+        // 그리기만
+        // obj.context.fillRect(values.rect1X[0], 0, parseInt(whiteRectWidth), obj.canvas.height);
+        // obj.context.fillRect(values.rect2X[0], 0, parseInt(whiteRectWidth), obj.canvas.height);
+        // 좌우 whiteRect 그리기( 애니메이션 적용 )
+        obj.context.fillRect(parseInt(calcValues(values.rect1X, currentYoffset)), 0, parseInt(whiteRectWidth), obj.canvas.height);
+        obj.context.fillRect(parseInt(calcValues(values.rect2X, currentYoffset)), 0, parseInt(whiteRectWidth), obj.canvas.height);
 
         break;
     }
