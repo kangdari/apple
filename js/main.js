@@ -122,7 +122,11 @@
         imagesPath: ["./images/blend-image-1.jpg", "./images/blend-image-2.jpg"],
         images: [],
       },
-      values: {},
+      values: {
+        // whiteBox 좌우 2개
+        rect1X: [0, 0, { start: 0, end: 0 }],
+        rect2X: [0, 0, { start: 0, end: 0 }],
+      },
     },
   ];
   // section별 canvas 이미지 파일 설정
@@ -337,17 +341,34 @@
         let canvasScaleRatio;
 
         if (widthRatio <= heightRatio) {
-          // 캔버스보다 브라우저 창이 홀쭉  | |
+          // 캔버스보다 브라우저 창이 홀쭉
           canvasScaleRatio = heightRatio;
           console.log("heightRatio로 비율 결정");
         } else {
-          // 캔버스보다 브라우저 창이 납작 |       |
+          // 캔버스보다 브라우저 창이 납작
           canvasScaleRatio = widthRatio;
           console.log("widthRatio로 비율 결정");
         }
         // 캔버스의 크기 설정
         obj.canvas.style.transform = `scale(${canvasScaleRatio})`;
         obj.context.drawImage(obj.images[0], 0, 0);
+
+        // 캔버스 사이즈에 맞춰 innerWidth, innerHeight
+        // 브라우저의 크기에 맞춰 그려진 canvas의 너비와 높이 값 계산
+        const recalculatedInnerWidth = window.innerWidth / canvasScaleRatio;
+        const recalculatedInnerHeight = window.innerHeight / canvasScaleRatio;
+        // whiteBox 너비
+        const whiteRectWidth = recalculatedInnerWidth * 0.15;
+        // 초기 whiteBox 좌표 구하기, 브라우저마다 크기가 다르므로 별도의 설정이 필요함
+        values.rect1X[0] = (obj.canvas.width - recalculatedInnerWidth) / 2;
+        values.rect1X[1] = values.rect1X[0] - whiteRectWidth;
+        values.rect2X[0] = values.rect1X[0] + recalculatedInnerWidth - whiteRectWidth;
+        values.rect2X[1] = values.rect2X[0] + whiteRectWidth;
+
+        // 좌우 whiteBox 그리기. context.fillRect(x, y, width, height)
+        obj.context.fillStyle = "white";
+        obj.context.fillRect(values.rect1X[0], 0, parseInt(whiteRectWidth), obj.canvas.height);
+        obj.context.fillRect(values.rect2X[0], 0, parseInt(whiteRectWidth), obj.canvas.height);
 
         break;
     }
