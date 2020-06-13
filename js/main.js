@@ -337,6 +337,50 @@
           obj.message3.style.opacity = calcValues(values.message3_opacity_out, currentYoffset);
           obj.message3.style.transform = `translate3d(0, ${calcValues(values.message3_translateY_out, currentYoffset)}%, 0)`;
         }
+
+        // setcion4가 시작될 때 canvas가 갑자기 보이는 것을 방지하기 위해서
+        // section3가 끝날때 쯤 미리 section4의 캔버스를 미리 그리는 작업
+        if (scrollRatio < 0.9) {
+          // case2의 obj, values와 변수 중복을 막기 위해서 {}안에서 변수 재 선언
+          // 여기서는 section4의 obj, values를 사용해야함.
+          const obj = sceneInfo[3].obj;
+          const values = sceneInfo[3].values;
+          const widthRatio = window.innerWidth / obj.canvas.width; // 원래 canvas의 너비에 대한 브라우저의 너비 비율
+          const heightRatio = window.innerHeight / obj.canvas.height; // 원래 canvas의 높이에 대한 브라우저의 높이 비율
+          let canvasScaleRatio;
+
+          if (widthRatio <= heightRatio) {
+            // 캔버스보다 브라우저 창이 홀쭉
+            canvasScaleRatio = heightRatio;
+          } else {
+            // 캔버스보다 브라우저 창이 납작
+            canvasScaleRatio = widthRatio;
+          }
+          // 캔버스의 크기 설정
+          obj.canvas.style.transform = `scale(${canvasScaleRatio})`;
+          obj.context.drawImage(obj.images[0], 0, 0);
+
+          // 캔버스 사이즈에 맞춰 innerWidth, innerHeight
+          // 브라우저의 크기에 맞춰 그려진 canvas의 너비와 높이 값 계산, 줄어든 canvas
+          // window.innerWidth는 스크롤의 너비까지 포함함으로 스크롤 너비를 포함하지 않는 document.body.offsetWidth로 변경
+          const recalculatedInnerWidth = document.body.offsetWidth / canvasScaleRatio;
+          const recalculatedInnerHeight = window.innerHeight / canvasScaleRatio;
+
+          // 애니메이션 선언 부분은 제거
+
+          // whiteRect 너비
+          const whiteRectWidth = recalculatedInnerWidth * 0.15;
+          // 초기 whiteRect 좌표 구하기, 브라우저마다 크기가 다르므로 별도의 설정이 필요함
+          values.rect1X[0] = (obj.canvas.width - recalculatedInnerWidth) / 2;
+          values.rect1X[1] = values.rect1X[0] - whiteRectWidth;
+          values.rect2X[0] = values.rect1X[0] + recalculatedInnerWidth - whiteRectWidth;
+          values.rect2X[1] = values.rect2X[0] + whiteRectWidth;
+
+          obj.context.fillStyle = "white";
+          // whiteRect 그리기만
+          obj.context.fillRect(values.rect1X[0], 0, parseInt(whiteRectWidth), obj.canvas.height);
+          obj.context.fillRect(values.rect2X[0], 0, parseInt(whiteRectWidth), obj.canvas.height);
+        }
         break;
       case 3:
         // canvas의 width, height가 브라우저에 가득 차게하기 위해서 설정( 계산 필요 )
