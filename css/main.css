@@ -165,7 +165,7 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
 }
 
 #scroll_section_03 .main_message_3 {
-  top: 15%;
+  top: 25%;
   left: 45%;
 }
 
