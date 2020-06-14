@@ -394,11 +394,9 @@
         if (widthRatio <= heightRatio) {
           // 캔버스보다 브라우저 창이 홀쭉
           canvasScaleRatio = heightRatio;
-          console.log("heightRatio로 비율 결정");
         } else {
           // 캔버스보다 브라우저 창이 납작
           canvasScaleRatio = widthRatio;
-          console.log("widthRatio로 비율 결정");
         }
         // 캔버스의 크기 설정
         obj.canvas.style.transform = `scale(${canvasScaleRatio})`;
@@ -477,8 +475,17 @@
             values.canvas_scale[2].end = values.canvas_scale[2].start + 0.2; // 끝점
 
             obj.canvas.style.transform = `scale(${calcValues(values.canvas_scale, currentYoffset)})`;
+            obj.canvas.style.marginTop = `0px`;
+          }
+          // canvas 크기 조절이 끝난 뒤
+          if (scrollRatio > values.canvas_scale[2].end && values.canvas_scale[2].end > 0) {
+            // fixed => static
+            obj.canvas.classList.remove("sticky");
+            // canvas가 fixed 상태에서 스크롤된 비율만큼 margin-top 값 설정
+            obj.canvas.style.marginTop = `${scrollHeight * 0.5}px`;
           }
         }
+
         break;
     }
   };
