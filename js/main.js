@@ -128,6 +128,7 @@
         rect1X: [0, 0, { start: 0, end: 0 }], // 사각형 그리는 [ 시작 좌표, 이동 후 끝 좌표, { 애니메이션 타이밍 }]
         rect2X: [0, 0, { start: 0, end: 0 }],
         imgBlendHeight: [0, 0, { start: 0, end: 0 }],
+        canvas_scale: [0, 0, { start: 0, end: 0 }],
         // canvas의 애니메이션이 시작 되는 지점, top 위치 값 설정, 단 한번 만 설정 되도록..
         rectStartY: 0,
       },
@@ -348,7 +349,7 @@
           const values = sceneInfo[3].values;
           const widthRatio = window.innerWidth / obj.canvas.width; // 원래 canvas의 너비에 대한 브라우저의 너비 비율
           const heightRatio = window.innerHeight / obj.canvas.height; // 원래 canvas의 높이에 대한 브라우저의 높이 비율
-          let canvasScaleRatio;
+          let canvasScaleRatio; // canvas 크기 조정 비율
 
           if (widthRatio <= heightRatio) {
             // 캔버스보다 브라우저 창이 홀쭉
@@ -467,6 +468,16 @@
           obj.canvas.classList.add("sticky");
           // 크기 조절된 canvas에 top 값 설정
           obj.canvas.style.top = `-${(obj.canvas.height - obj.canvas.height * canvasScaleRatio) / 2}px`;
+
+          if (scrollRatio > values.imgBlendHeight[2].end) {
+            values.canvas_scale[0] = canvasScaleRatio; // 현재 캔버스 크기 비율
+            // 캔버스 축소된 최종 크기, 분모의 크기를 늘려 수를 작게 만듦.
+            values.canvas_scale[1] = document.body.offsetWidth / (1.5 * obj.canvas.width);
+            values.canvas_scale[2].start = values.imgBlendHeight[2].end; // 애니메이션 시작점
+            values.canvas_scale[2].end = values.canvas_scale[2].start + 0.2; // 끝점
+
+            obj.canvas.style.transform = `scale(${calcValues(values.canvas_scale, currentYoffset)})`;
+          }
         }
         break;
     }
