@@ -187,7 +187,8 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
   padding: 0 1rem;
   font-size: 1.2rem;
   max-width: 1000px;
-  margin: 0 auto;
+  /* margin: 0 auto; */
+  margin: -5em auto 0;
 }
 
 .image_blend_canvas.sticky {
@@ -254,6 +255,7 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
   }
   /* section 2 */
   .description {
+    padding: 0;
     font-size: 2rem;
   }
   .description strong {
@@ -279,9 +281,12 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
   }
   /* section 4 */
   .mid_message {
+    width: 1000px;
+    padding: 0;
     font-size: 4vw;
   }
   .canvas_caption {
+    padding: 0;
     font-size: 2rem;
   }
 }

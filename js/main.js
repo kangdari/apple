@@ -129,7 +129,8 @@
         rect2X: [0, 0, { start: 0, end: 0 }],
         imgBlendHeight: [0, 0, { start: 0, end: 0 }],
         canvas_scale: [0, 0, { start: 0, end: 0 }],
-        // canvas의 애니메이션이 시작 되는 지점, top 위치 값 설정, 단 한번 만 설정 되도록..
+        canvasCaption_opacity: [0, 1, { start: 0, end: 0 }],
+        canvasCaption_translateY: [20, 0, { start: 0, end: 0 }],
         rectStartY: 0,
       },
     },
@@ -476,6 +477,8 @@
 
             obj.canvas.style.transform = `scale(${calcValues(values.canvas_scale, currentYoffset)})`;
             obj.canvas.style.marginTop = `0px`;
+
+            obj.canvasCaption.style.display = "none";
           }
           // canvas 크기 조절이 끝난 뒤
           if (scrollRatio > values.canvas_scale[2].end && values.canvas_scale[2].end > 0) {
@@ -483,6 +486,17 @@
             obj.canvas.classList.remove("sticky");
             // canvas가 fixed 상태에서 스크롤된 비율만큼 margin-top 값 설정
             obj.canvas.style.marginTop = `${scrollHeight * 0.5}px`;
+
+            // canvas_caption 애니메이션 설정
+            obj.canvasCaption.style.display = "block";
+            // opacity
+            values.canvasCaption_opacity[2].start = values.canvas_scale[2].end; // 캔버스 크기 조절이 끝난 뒤
+            values.canvasCaption_opacity[2].end = values.canvasCaption_opacity[2].start + 0.1;
+            obj.canvasCaption.style.opacity = calcValues(values.canvasCaption_opacity, currentYoffset);
+            // translate
+            values.canvasCaption_translateY[2].start = values.canvas_scale[2].end; // 캔버스 크기 조절이 끝난 뒤
+            values.canvasCaption_translateY[2].end = values.canvasCaption_opacity[2].start + 0.1;
+            obj.canvasCaption.style.transform = `translate3d(0, ${calcValues(values.canvasCaption_translateY, currentYoffset)}%, 0)`;
           }
         }
 
