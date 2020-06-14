@@ -190,7 +190,9 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
   margin: 0 auto;
 }
 
-.image_blend_canvas {
+.image_blend_canvas.sticky {
+  position: fixed;
+  top: 0;
 }
 
 #scroll_section_04 {

@@ -383,6 +383,7 @@
         }
         break;
       case 3:
+        let step = 0;
         // canvas의 width, height가 브라우저에 가득 차게하기 위해서 설정( 계산 필요 )
         const widthRatio = window.innerWidth / obj.canvas.width; // 원래 canvas의 너비에 대한 브라우저의 너비 비율
         const heightRatio = window.innerHeight / obj.canvas.height; // 원래 canvas의 높이에 대한 브라우저의 높이 비율
@@ -436,6 +437,16 @@
         obj.context.fillRect(parseInt(calcValues(values.rect1X, currentYoffset)), 0, parseInt(whiteRectWidth), obj.canvas.height);
         obj.context.fillRect(parseInt(calcValues(values.rect2X, currentYoffset)), 0, parseInt(whiteRectWidth), obj.canvas.height);
 
+        // canvas가 브라우저 상단에 닿지 않았다면
+        if (scrollRatio < values.rect1X[2].end) {
+          step = 1;
+          obj.canvas.classList.remove("sticky");
+        } else {
+          step = 2;
+          obj.canvas.classList.add("sticky");
+          // 크기 조절된 canvas에 top 값 설정
+          obj.canvas.style.top = `-${(obj.canvas.height - obj.canvas.height * canvasScaleRatio) / 2}px`;
+        }
         break;
     }
   };
