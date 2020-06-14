@@ -127,6 +127,7 @@
         // playAnimation 함수에서 설정함.
         rect1X: [0, 0, { start: 0, end: 0 }], // 사각형 그리는 [ 시작 좌표, 이동 후 끝 좌표, { 애니메이션 타이밍 }]
         rect2X: [0, 0, { start: 0, end: 0 }],
+        imgBlendHeight: [0, 0, { start: 0, end: 0 }],
         // canvas의 애니메이션이 시작 되는 지점, top 위치 값 설정, 단 한번 만 설정 되도록..
         rectStartY: 0,
       },
@@ -443,6 +444,26 @@
           obj.canvas.classList.remove("sticky");
         } else {
           step = 2;
+          // imgBlendHeight 초기 값 설정
+          values.imgBlendHeight[0] = 0;
+          values.imgBlendHeight[1] = obj.canvas.height;
+          values.imgBlendHeight[2].start = values.rect1X[2].end; // canvas가 fixed된 순간
+          values.imgBlendHeight[2].end = values.imgBlendHeight[2].start + 0.3;
+          // 그리는 img의 높이 값
+          const blendHeight = calcValues(values.imgBlendHeight, currentYoffset);
+
+          obj.context.drawImage(
+            obj.images[1],
+            0, // sx
+            obj.canvas.height - blendHeight, // sy
+            obj.canvas.width, // sWdith
+            blendHeight, // sHeight
+            0, // dx
+            obj.canvas.height - blendHeight, // dy
+            obj.canvas.width, // dWidth
+            blendHeight // dHeight
+          );
+
           obj.canvas.classList.add("sticky");
           // 크기 조절된 canvas에 top 값 설정
           obj.canvas.style.top = `-${(obj.canvas.height - obj.canvas.height * canvasScaleRatio) / 2}px`;
