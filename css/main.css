@@ -4,7 +4,7 @@
   /* size */
   --large--font: 21px;
   --medium-font: 14px;
-  --smal--font: 12px;
+  --small--font: 12px;
   /* color */
   --white--color: #fff;
   --black--color: #1d1d1d;
@@ -83,7 +83,14 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
 /* .product_name 요소는 제외 */
 .local_nav .local_nav_links a:not(.product_name) {
   margin-left: 2em;
-  font-size: var(--smal--font);
+  font-size: var(--small--font);
+}
+
+.local_nav_sticky .local_nav {
+  position: fixed;
+  top: 0;
+  background-color: rgba(252, 255, 255, 0.1);
+  backdrop-filter: saturate(180%) blur(15px);
 }
 
 /* section */

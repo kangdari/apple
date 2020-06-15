@@ -165,6 +165,16 @@
 
   setCanvasImage();
 
+  // local_nav position 설정 함수
+  const checkMenu = () => {
+    // global_nav의 높이: 44px
+    if (yOffset > 44) {
+      document.body.classList.add("local_nav_sticky");
+    } else {
+      document.body.classList.remove("local_nav_sticky");
+    }
+  };
+
   // section의 높이 설정 함수
   const setLayout = () => {
     for (let i = 0; i < sceneInfo.length; i++) {
@@ -543,6 +553,7 @@
   window.addEventListener("scroll", () => {
     yOffset = window.pageYOffset;
     scrollLoop();
+    checkMenu();
   });
 
   // DOMContentLoaded: html 요소들으 로드될 때
