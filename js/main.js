@@ -8,6 +8,12 @@
   let currentScene = 0; // 현재 보여지는 씬  = scroll_section
   let changeScene = false; // 씬이 바뀌는 순간 true
 
+  // 애니메이션 감속 처리
+  let acc = 0.1; // 가속도
+  let delayedYOffset = 0; // 가속도 처리된 현재 스크롤 위치
+  let rafId; // requestAnimationFrame id
+  let rafState; // requestAnimationFrame 실행 상태
+
   const sceneInfo = [
     // 4개의 section 정보
     {
@@ -258,9 +264,8 @@
     switch (currentScene) {
       case 0:
         // 동영상(이미지)은 섹션의 시작부터 끝까지 실행되어야 하기 때문에 분기 처리를 하지 않습니다.
-        let sequence = Math.round(calcValues(values.imageSequence, currentYoffset)); // 정수로 변경
-        obj.context.drawImage(obj.videoImages[sequence], 0, 0); // (file, x축, y축)
-        // obj.canvas.style.opacity = calcValues(values.canvas_opacity_in, currentYoffset);
+        // let sequence = Math.round(calcValues(values.imageSequence, currentYoffset)); // 정수로 변경
+        // obj.context.drawImage(obj.videoImages[sequence], 0, 0); // (file, x축, y축)
         obj.canvas.style.opacity = calcValues(values.canvas_opacity_out, currentYoffset); // canvas opacity 0으로...
         // 필요한 상황에만 연산하도록 코드 수정
         if (scrollRatio <= 0.22) {
@@ -306,9 +311,8 @@
         break;
       // section 2(case 1)는 애니메이션이 없으므로 제외
       case 2:
-        let sequence2 = Math.round(calcValues(values.imageSequence, currentYoffset)); // 정수로 변경
-        obj.context.drawImage(obj.videoImages[sequence2], 0, 0); // (file, x축, y축)
-        // obj.canvas.style.opacity = calcValues(values.canvas_opacity_out, currentYoffset); // canvas opacity 0으로...
+        // let sequence2 = Math.round(calcValues(values.imageSequence, currentYoffset)); // 정수로 변경
+        // obj.context.drawImage(obj.videoImages[sequence2], 0, 0); // (file, x축, y축)
 
         if (scrollRatio <= 0.5) {
           // opacity 0 => 1
@@ -523,9 +527,10 @@
       prevScrollHeight += sceneInfo[i].scrollHeight;
     }
 
+    // currentScene 설정
     // 현재 스크롤 위치 > 이전 씬들의 스크롤 높이 합(현재씬-1 개) + 현재 씬의 스크롤 높이
     // 즉 섹션이 바뀔 때...
-    if (yOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
+    if (delayedYOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
       currentScene++;
       changeScene = true; // 씬이 바뀌는 순간 true로 변경
       // body 요소에 현재 씬 관련 아이디 값을 설정하면
@@ -533,8 +538,7 @@
       document.body.setAttribute("id", `show_scene_0${currentScene + 1}`);
     }
     // 현재 스크롤 위치 < 이전 씬들의 스크롤 높이 합
-    // 섹션이 바뀔 때
-    if (yOffset < prevScrollHeight) {
+    if (delayedYOffset < prevScrollHeight) {
       changeScene = true; // 씬이 바뀌는 순간 true로 변경
       // currentScene이 -1 되는 경우를 방지
       if (currentScene === 0) return;
@@ -548,18 +552,53 @@
     playAnimation();
   };
 
+  // requestAnimationFrame && 감속 처리 함수
+  const render = () => {
+    // 스크롤 위치에 가속도 처리
+    delayedYOffset = delayedYOffset + (yOffset - delayedYOffset) * acc;
+
+    // 씬이 바뀌지 않는 순간에만 img를 그리도록 분기 처리
+    if (!changeScene) {
+      // canvas에 이미지를 그리는 1, 3번 섹션에만 적용
+      if (currentScene === 0 || currentScene === 2) {
+        const currentYoffset = delayedYOffset - prevScrollHeight; // yOffset 대신 delayedYOffset 사용
+        const values = sceneInfo[currentScene].values;
+        const obj = sceneInfo[currentScene].obj;
+
+        let sequence = Math.round(calcValues(values.imageSequence, currentYoffset));
+        // 이미지가 있을 때만
+        if (obj.videoImages[sequence]) {
+          obj.context.drawImage(obj.videoImages[sequence], 0, 0);
+        }
+      }
+    }
+
+    rafId = requestAnimationFrame(render);
+    // 최종 목적 스크롤 위치와 가속도 처리된 스크롤 위치의 차이가 1px이하
+    if (Math.abs(yOffset - delayedYOffset) <= 1) {
+      cancelAnimationFrame(rafId); // 중지
+      rafState = false;
+    }
+  };
+
   // 브라우저의 사이즈가 변경되면 section의 높이를 재설정
   window.addEventListener("resize", setLayout);
+
   window.addEventListener("scroll", () => {
     yOffset = window.pageYOffset;
     scrollLoop();
     checkMenu();
+
+    if (!rafState) {
+      rafId = requestAnimationFrame(render);
+      rafState = true;
+    }
   });
 
   // DOMContentLoaded: html 요소들으 로드될 때
   // window.addEventListener("DOMContentLoaded", setLayout);
 
-  // load: html요소들과 img와 같은 리소스들도 로드될 때
+  // load: html요소들과 img와 같은 리소스들도   로드될 때
   // 문서가 로드되면 setLayout 실행.
   window.addEventListener("load", () => {
     setLayout();
