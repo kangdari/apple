@@ -169,8 +169,6 @@
     }
   };
 
-  setCanvasImage();
-
   // local_nav position 설정 함수
   const checkMenu = () => {
     // global_nav의 높이: 44px
@@ -581,8 +579,19 @@
     }
   };
 
-  // 브라우저의 사이즈가 변경되면 section의 높이를 재설정
-  window.addEventListener("resize", setLayout);
+  // section의 높이를 재설정
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 900) {
+      setLayout();
+    }
+
+    // 브라우저의 크기가 변할 때 whiteRect의 애니메이션
+    // start, end 값 재설정을 위해 rectStartY 초기화
+    sceneInfo[3].values.rectStartY = 0;
+  });
+
+  // 모바일 회전 이벤트 발생 시
+  window.addEventListener("orientationchange", setLayout);
 
   window.addEventListener("scroll", () => {
     yOffset = window.pageYOffset;
@@ -596,8 +605,6 @@
   });
 
   // DOMContentLoaded: html 요소들으 로드될 때
-  // window.addEventListener("DOMContentLoaded", setLayout);
-
   // load: html요소들과 img와 같은 리소스들도   로드될 때
   // 문서가 로드되면 setLayout 실행.
   window.addEventListener("load", () => {
@@ -605,4 +612,6 @@
     // 로드가 끝나고 동영상 첫 이미지를 캔버스에 그려줌.
     sceneInfo[0].obj.context.drawImage(sceneInfo[0].obj.videoImages[0], 0, 0); // (file, x축, y축)
   });
+
+  setCanvasImage();
 })();
