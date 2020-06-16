@@ -38,6 +38,11 @@ body.before_load {
   overflow-y: hidden;
 }
 
+#container {
+  /* 모바일에서 가로 스크롤 방지 */
+  overflow-x: hidden;
+}
+
 /* loading */
 .loading {
   position: fixed;
@@ -152,6 +157,11 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
   position: fixed;
   top: 0;
   background-color: rgba(252, 255, 255, 0.1);
+  /* chrome, safari */
+  -webkit-backdrop-filter: saturate(180%) blur(15px);
+  /* firefox */
+  -moz-backdrop-filter: saturate(180%) blur(15px);
+  -o-backdrop-filter: saturate(180%) blur(15px);
   backdrop-filter: saturate(180%) blur(15px);
 }
 
@@ -256,8 +266,9 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
   padding: 0 1rem;
   font-size: 1.2rem;
   max-width: 1000px;
-  /* margin: 0 auto; */
-  margin: -5em auto 0;
+  /* 모바일에서 문단이 canvas와 겹쳐서   */
+  /* iphoneXR 기준 */
+  margin: -24rem auto 0;
 }
 
 .image_blend_canvas.sticky {
@@ -358,5 +369,6 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
   .canvas_caption {
     padding: 0;
     font-size: 2rem;
+    margin-top: -8rem;
   }
 }
