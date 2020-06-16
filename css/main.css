@@ -58,6 +58,11 @@ body.before_load {
   opacity: 0;
   transition: 0.5s;
 }
+/* 로드가 되기 전에는 섹션의 높이 값이 설정되지 않도록 안보이게 설정*/
+.before_load #container {
+  display: none;
+}
+
 /* 로딩이 종료되면 before_load 클래스 제거 */
 .before_load .loading {
   opacity: 1;
