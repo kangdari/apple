@@ -608,9 +608,16 @@
   // load: html요소들과 img와 같은 리소스들도   로드될 때
   // 문서가 로드되면 setLayout 실행.
   window.addEventListener("load", () => {
+    document.body.classList.remove("before_load");
     setLayout();
     // 로드가 끝나고 동영상 첫 이미지를 캔버스에 그려줌.
     sceneInfo[0].obj.context.drawImage(sceneInfo[0].obj.videoImages[0], 0, 0); // (file, x축, y축)
+  });
+
+  // transitionend: transition event가 끝났을 때
+  document.querySelector(".loading").addEventListener("transitionend", (e) => {
+    // e.currentTarget = document.querySelector(".loading")
+    document.body.removeChild(e.currentTarget);
   });
 
   setCanvasImage();
