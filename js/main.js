@@ -590,16 +590,19 @@
 
     // section의 높이를 재설정
     window.addEventListener("resize", () => {
+      // landscape 모드 너비 값 고려
       if (window.innerWidth > 900) {
         setLayout();
+        // 브라우저의 크기가 변할 때 whiteRect의 애니메이션
+        // start, end 값 재설정을 위해 rectStartY 초기화
+        sceneInfo[3].values.rectStartY = 0;
       }
-      // 브라우저의 크기가 변할 때 whiteRect의 애니메이션
-      // start, end 값 재설정을 위해 rectStartY 초기화
-      sceneInfo[3].values.rectStartY = 0;
     });
 
     // 모바일 회전 이벤트 발생 시
-    window.addEventListener("orientationchange", setLayout);
+    window.addEventListener("orientationchange", () => {
+      setTimeout(setLayout, 500);
+    });
 
     window.addEventListener("scroll", () => {
       yOffset = window.pageYOffset;
