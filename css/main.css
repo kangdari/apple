@@ -298,6 +298,7 @@ nav가 영역을 차지하지 않도록 position:absolute 값으로 설정  */
 #show_scene_03 #scroll_section_03 .sticky_elem,
 #show_scene_04 #scroll_section_04 .sticky_elem {
   display: block;
+  /* will-change: transform, opacity; */
 }
 
 /* canvas */
