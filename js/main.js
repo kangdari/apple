@@ -588,6 +588,21 @@
     // 로드가 끝나고 동영상 첫 이미지를 캔버스에 그려줌.
     sceneInfo[0].obj.context.drawImage(sceneInfo[0].obj.videoImages[0], 0, 0); // (file, x축, y축)
 
+    // 새로고침 후 캔버스에 아무것도 그려지지 않는 에러 해결
+    // 약간의 스크롤을 발생시키기
+    let tempYOffset = yOffset; // 현재 스크롤위치를 저장할 변수
+    let tempScrollCount = 0;
+    if (tempYOffset > 0) {
+      let siID = setInterval(() => {
+        window.scrollTo(0, tempYOffset); // 스크롤 y축 이동
+        tempYOffset += 3; // 3px씩 이동
+        tempScrollCount++;
+        if (tempScrollCount > 20) {
+          clearInterval(siID); // setInterval 종료
+        }
+      }, 20);
+    }
+
     // section의 높이를 재설정
     window.addEventListener("resize", () => {
       // landscape 모드 너비 값 고려
