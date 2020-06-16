@@ -125,7 +125,7 @@
         canvasCaption: document.querySelector(".canvas_caption"),
         canvas: document.querySelector(".image_blend_canvas"),
         context: document.querySelector(".image_blend_canvas").getContext("2d"),
-        imagesPath: ["./images/blend-image-1.jpg", "./images/blend-image-2.jpg"],
+        imagesPath: ["../images/blend-image-1.jpg", "../images/blend-image-2.jpg"],
         images: [],
       },
       values: {
@@ -149,7 +149,7 @@
     for (let i = 0; i < sceneInfo[0].values.videoImageCount; i++) {
       imgElem = new Image();
       // imgElem = document.createElement('img');
-      imgElem.src = `/video/001/IMG_${6726 + i}.JPG`;
+      imgElem.src = `../video/001/IMG_${6726 + i}.JPG`;
       sceneInfo[0].obj.videoImages.push(imgElem);
     }
 
@@ -157,7 +157,7 @@
     for (let i = 0; i < sceneInfo[2].values.videoImageCount; i++) {
       imgElem2 = new Image();
       // imgElem = document.createElement('img');
-      imgElem2.src = `/video/002/IMG_${7028 + i}.JPG`;
+      imgElem2.src = `../video/002/IMG_${7028 + i}.JPG`;
       sceneInfo[2].obj.videoImages.push(imgElem2);
     }
 
