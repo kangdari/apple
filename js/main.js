@@ -579,31 +579,6 @@
     }
   };
 
-  // section의 높이를 재설정
-  window.addEventListener("resize", () => {
-    if (window.innerWidth > 900) {
-      setLayout();
-    }
-
-    // 브라우저의 크기가 변할 때 whiteRect의 애니메이션
-    // start, end 값 재설정을 위해 rectStartY 초기화
-    sceneInfo[3].values.rectStartY = 0;
-  });
-
-  // 모바일 회전 이벤트 발생 시
-  window.addEventListener("orientationchange", setLayout);
-
-  window.addEventListener("scroll", () => {
-    yOffset = window.pageYOffset;
-    scrollLoop();
-    checkMenu();
-
-    if (!rafState) {
-      rafId = requestAnimationFrame(render);
-      rafState = true;
-    }
-  });
-
   // DOMContentLoaded: html 요소들으 로드될 때
   // load: html요소들과 img와 같은 리소스들도   로드될 때
   // 문서가 로드되면 setLayout 실행.
@@ -612,6 +587,30 @@
     setLayout();
     // 로드가 끝나고 동영상 첫 이미지를 캔버스에 그려줌.
     sceneInfo[0].obj.context.drawImage(sceneInfo[0].obj.videoImages[0], 0, 0); // (file, x축, y축)
+
+    // section의 높이를 재설정
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 900) {
+        setLayout();
+      }
+      // 브라우저의 크기가 변할 때 whiteRect의 애니메이션
+      // start, end 값 재설정을 위해 rectStartY 초기화
+      sceneInfo[3].values.rectStartY = 0;
+    });
+
+    // 모바일 회전 이벤트 발생 시
+    window.addEventListener("orientationchange", setLayout);
+
+    window.addEventListener("scroll", () => {
+      yOffset = window.pageYOffset;
+      scrollLoop();
+      checkMenu();
+
+      if (!rafState) {
+        rafId = requestAnimationFrame(render);
+        rafState = true;
+      }
+    });
   });
 
   // transitionend: transition event가 끝났을 때

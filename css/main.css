@@ -17,6 +17,27 @@ html {
   font-size: 14px;
 }
 
+body {
+  overflow-x: hidden;
+  color: var(--black--color);
+  /* 자간 */
+  letter-spacing: -0.05em;
+  background-color: var(--white--color);
+}
+
+p {
+  line-height: 1.6;
+}
+
+a {
+  color: var(--black--color);
+  text-decoration: none;
+}
+/* 로딩중일 때는 스크롤 바 제거 */
+body.before_load {
+  overflow-y: hidden;
+}
+
 /* loading */
 .loading {
   position: fixed;
@@ -73,23 +94,6 @@ html {
   /* 색상 */
   fill: none;
   animation: loading_circle_ani 1s infinite;
-}
-
-body {
-  overflow-x: hidden;
-  color: var(--black--color);
-  /* 자간 */
-  letter-spacing: -0.05em;
-  background-color: var(--white--color);
-}
-
-p {
-  line-height: 1.6;
-}
-
-a {
-  color: var(--black--color);
-  text-decoration: none;
 }
 
 /* menu */
