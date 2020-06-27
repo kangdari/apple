@@ -620,7 +620,6 @@
   const render = () => {
     // 스크롤 위치에 가속도 처리
     delayedYOffset = delayedYOffset + (yOffset - delayedYOffset) * acc;
-
     // 씬이 바뀌지 않는 순간에만 img를 그리도록 분기 처리
     if (!changeScene) {
       // canvas에 이미지를 그리는 1, 3번 섹션에만 적용
@@ -637,6 +636,19 @@
       }
     }
 
+    // home: fn + < , end: fn + >
+    // home, end 키로 페이지의 끝으로 이동하는 경우 body id를 제대로 인식 안되는 경우 오류 발생
+    // home 키로 페이지 맨 위로 올라간 경우: scrollLoop()와 첫 섹션의 canvas 그리기 수행
+    if (delayedYOffset < 1) {
+      scrollLoop();
+      sceneInfo[0].obj.canvas.opacity = 1;
+      sceneInfo[0].obj.context.drawImage(sceneInfo[0].obj.videoImages[0], 0, 0);
+    }
+    // end 키로 페이지 맨 아래로 갈 경우: 마지막 섹션은 스크롤 계산으로 위치 및 크기를 결정해야할 요소들이 많아서 1픽셀을 움직여주는 것으로 해결
+    if (document.body.offsetHeight - window.innerHeight - delayedYOffset < 1) {
+      let tempYOffset = yOffset;
+      scrollTo(0, tempYOffset - 1);
+    }
     rafId = requestAnimationFrame(render);
     // 최종 목적 스크롤 위치와 가속도 처리된 스크롤 위치의 차이가 1px이하
     if (Math.abs(yOffset - delayedYOffset) <= 1) {
